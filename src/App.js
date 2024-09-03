@@ -1,24 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import React, { useEffect, useState } from "react";
+import Navbar from "./components/Navbar";
+import { Offline, Online } from "react-detect-offline";
+import { toast } from "react-toastify";
+import LoadingBar from "react-top-loading-bar";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Home from "./components/Home";
+import About from "./components/About";
+import NoteState from "./context/notes/NoteState";
 
 function App() {
+  const [progress,setProgress]=useState("0")
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+    <NoteState>
+      <Router>
+        <LoadingBar color="#f11946" progress={progress} onLoaderFinished={() => setProgress('0')} />
+          <Offline></Offline>
+          <Online></Online>
+          <Navbar />
+          <Routes>
+            <Route exact path="/" element={
+                <Home/>
+              }>
+            </Route>
+            <Route exact path="/about" element={<About/>}>
+            
+            </Route>
+          </Routes>
+      </Router>
+    </NoteState>
+   
+    </>
   );
 }
 

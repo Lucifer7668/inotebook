@@ -3,9 +3,11 @@ const User=require('../models/User');
 const router=express.Router();
 const {body, validationResult} = require('express-validator');
 const bcrypt =require('bcryptjs');
+var UserMiddleware=require('../middleware/UserMiddlware');
 var jwt = require('jsonwebtoken');
 const JWT_SECRET=process.env.JWT_SECRET;
-//Register user using :post "/api/auth/register". Doesn't required Auth
+
+//Route 1: Register user using :post "/api/auth/register". Doesn't required Auth
 router.post('/register',[
     body('email','Enter a valid email') .isEmail().custom(async value => {
         const existingUser = await User.findOne({ 'email': value });
@@ -51,7 +53,6 @@ router.post('/register',[
                 }
             }
         const authtoken=    jwt.sign(data,JWT_SECRET);
-        console.log(authtoken);
         res.status(201).json({authtoken});
       } catch (error) {
         res.status(400).json({ message: error.message });
@@ -59,7 +60,7 @@ router.post('/register',[
   })
 
 
-  //Register user using :post "/api/auth/register". Doesn't required Auth
+  //Route 2:Login user using :post "/api/auth/login". Doesn't required Auth
 router.post('/login',[
     body('email','Enter a valid email').isEmail(),
     body('password','Password must be atleast 5 character').exists().isLength({min:5}),
@@ -77,8 +78,6 @@ router.post('/login',[
         const {email,password}= req.body;
         try {
             let user= await User.findOne({"email":email});
-        console.log({email,password,user})
-
             if(!user){
                 return res.status(400).json({errors:{message:"No User Found"}});
             }
@@ -94,12 +93,26 @@ router.post('/login',[
                 }
             }
             const authtoken=jwt.sign(payload,JWT_SECRET);
-            console.log(authtoken);
             res.status(201).json({authtoken});
       } catch (error) {
 
         res.status(400).json(error.message);
       }
   })
+
+  //Route 3: Get Loggged in User Details using  POST: "api/auth/getuser". Login Required
   
+  router.post('/getuser' ,UserMiddleware,async(req, res) => {
+   
+       
+        try {
+           userId=req.user.id;
+           const user= await User.findById(userId).select("-password");
+
+            res.status(200).json({user});
+      } catch (error) {
+
+        res.status(400).json(error.message);
+      }
+  })
   module.exports=router;
