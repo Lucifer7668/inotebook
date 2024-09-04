@@ -10,27 +10,27 @@ import About from "./components/About";
 import NoteState from "./context/notes/NoteState";
 
 function App() {
-  const [progress,setProgress]=useState("0")
+  const [progress, setProgress] = useState("0");
   return (
     <>
-    <NoteState>
-      <Router>
-        <LoadingBar color="#f11946" progress={progress} onLoaderFinished={() => setProgress('0')} />
+      <NoteState>
+        <Router>
+          <LoadingBar
+            color="#f11946"
+            progress={progress}
+            onLoaderFinished={() => setProgress("0")}
+          />
           <Offline></Offline>
           <Online></Online>
           <Navbar />
-          <Routes>
-            <Route exact path="/" element={
-                <Home/>
-              }>
-            </Route>
-            <Route exact path="/about" element={<About/>}>
-            
-            </Route>
-          </Routes>
-      </Router>
-    </NoteState>
-   
+          <div className="container">
+            <Routes>
+              <Route exact path="/" element={<Home />}></Route>
+              <Route exact path="/about" element={<About />}></Route>
+            </Routes>
+          </div>
+        </Router>
+      </NoteState>
     </>
   );
 }

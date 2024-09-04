@@ -81,8 +81,6 @@ router.post('/login',[
             if(!user){
                 return res.status(400).json({errors:{message:"No User Found"}});
             }
-            console.log({email,password,user})
-
             const passwordCompare=await bcrypt.compare(password,user.password);
             if(!passwordCompare){
                 return res.status(400).json({errors:{message:"No User Found"}});
