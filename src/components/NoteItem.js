@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
+import NoteContext from "../context/notes/NoteContext";
 
 const NoteItem = (props) => {
-  const { note,index } = props;
+    const context=useContext(NoteContext);
+    const {deleteNote}=context;
+  const { note,index,updateNote } = props;
   return (
     <>
       <tr>
@@ -15,8 +18,11 @@ const NoteItem = (props) => {
     {note.description}
         </td>
         <td>
-        <i className="bi bi-pencil"></i> Edit
-        <i className="bi bi-trash-fill"></i> Delete
+    {note.tag}
+        </td>
+        <td>
+        <i className="bi bi-pencil" onClick={()=>{updateNote(note)}}></i>
+        <i className="bi bi-trash-fill mx-2"  onClick={()=>{deleteNote(note._id)}}></i>
         </td>
       </tr>
     </>

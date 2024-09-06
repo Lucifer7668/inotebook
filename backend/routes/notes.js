@@ -35,6 +35,7 @@ router.get('/fetchallnotes',UserMiddleware, async(req, res) => {
             user:req.user.id,
             title:req.body.title,
             description:req.body.description,
+            tag:req.body.tag,
         });
         res.status(200).json(note);
     }catch(error){
